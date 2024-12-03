@@ -56,7 +56,7 @@ This provides a simple client-side application to display "Now Playing" informat
 - If cross-origin issues occur, ensure the Plex server allows connections from your browser.
 
 ## Issues
-- The progress bar can be janky, plex doesn't reliably provide the information and it won't worked when paused. Refreshing should bring you to more or less the right place. 
+- The progress bar can be janky, plex doesn't reliably provide the information and it won't work when paused. Refreshing should bring you to more or less the right place. 
 
 
 ## License
