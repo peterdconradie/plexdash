@@ -39,6 +39,7 @@ This provides a simple client-side application to display "Now Playing" informat
    ```
    This will start a local web server on the default port 8000.
 
+## What does it look like?
 ![image](screenshot.png "Screenshot")
 
 
