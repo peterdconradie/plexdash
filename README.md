@@ -18,26 +18,32 @@ This provides a simple client-side application to display "Now Playing" informat
 - Basic knowledge of setting up a local development environment.
 
 ## Setup
+1. **Clone the repository**:
+   To clone this repository to your local machine, run the following command:
 
-1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/peterdconradie/plexdash.git
    ```
 
-2. Add your Plex API key and server URL:
-   Create a file named `apikey.js` in the project directory with the following content:
+2. **Copy the files**:
+   Copy the entire `plexdash` folder to wherever you prefer to run it from. Make sure you retain the folder structure.
+
+3. **Add your Plex API key and server URL**:
+   Rename the file `apikey_CHANGE_THIS.js` to `apikey.js` in the project directory. Then, update the file with your Plex API key and server URL by replacing the placeholder values:
+
    ```javascript
-   export const plexApiKey = 'YOUR_PLEX_API_KEY';
+   export const plexApiKey = 'YOUR_PLEX_API_KEY'; // Find it here: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
    export const plexServerUrl = 'YOUR_PLEX_SERVER_URL';
    ```
 
-3. Open the project in a browser:
-   Use a local web server (i.e.: navigate to the folder in mac in the terminal and run
+4. **Open the project in a browser**:
+   To view the project, you'll need to run it on a local web server. If you're on a Mac, navigate to the project directory in the terminal and run:
+
    ```bash
    python3 -m http.server
    ```
-   This will start a local web server on the default port 8000.
+
+   This will start a local web server on port `8000`. Open your browser and go to `http://localhost:8000` to view the project.
 
 ## What does it look like?
 ![image](screenshot.png "Screenshot")
