@@ -1,0 +1,189 @@
+/* General body styling for dark theme */
+
+body {
+    font-family: Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #181818;
+    color: #E0E0E0;
+    display: flex;
+    justify-content: center;
+    /* Centers horizontally */
+    align-items: center;
+    /* Centers vertically */
+    min-height: 100vh;
+    flex-direction: column;
+    /* Stack elements vertically */
+}
+
+
+/* Progress bar container styling */
+
+#progress-bar-container {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    /* Light gray background */
+    margin: 0;
+    /* Remove default margin */
+}
+
+
+/* Progress bar styling */
+
+#progress-bar {
+    width: 10%;
+    height: 100%;
+    transition: width 0.1s linear;
+}
+
+
+/* Container for the entire content (progress bar + album art and info) */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    /* Stack progress bar and content vertically */
+    align-items: center;
+    /* Center content horizontally */
+    width: 100%;
+    max-width: 1200px;
+    /* Limit the container width */
+}
+
+
+/* Content container with album art and info side by side */
+
+.content {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    /* Space between album art and track info */
+    justify-content: center;
+    /* Center content horizontally inside container */
+}
+
+
+/* Ensure the album art container doesn’t have any extra spacing */
+
+.album-art-container {
+    flex: 0 0 50%;
+    /* Take up half the width of the container */
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Album art styling */
+
+#album-art {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+
+/* Album info section */
+
+.album-info {
+    flex: 1;
+    /* Take up remaining space */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 700px;
+    justify-content: flex-start;
+    /* Align content at the top */
+}
+
+
+/* Styling for text elements */
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+ul {
+    color: #e5e5e5;
+    margin: 0;
+}
+
+
+/* Text sizes for headings */
+
+h1 {
+    font-size: 4vw;
+    padding-bottom: .5vw;
+}
+
+h2 {
+    font-size: 3vw;
+    padding-bottom: .5vw;
+}
+
+h3 {
+    font-size: 2.5vw;
+    padding-bottom: .5vw;
+}
+
+h4 {
+    font-size: 1.3vw;
+}
+
+h5 {
+    font-size: 1vw;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: inline;
+    color: #F5F5F5;
+    font-weight: 400;
+}
+
+
+/* Music connections styling */
+
+#music-connections {
+    display: inline;
+    text-align: center;
+    margin-top: 5px;
+}
+
+#music-connections img,
+.music-icon {
+    display: inline-block;
+    width: .75vw;
+    height: .75vw;
+    margin-left: 5px;
+    vertical-align: middle;
+    filter: grayscale(100%);
+}
+
+
+/* Paragraph styling */
+
+p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    line-height: 1.5em;
+    font-size: .75vw;
+    font-weight: 400;
+    display: inline;
+    color: #767676;
+}
+
+
+/* Media query for smaller screens */
+
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .album-art-container {
+        max-width: 100%;
+    }
+}
