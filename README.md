@@ -63,7 +63,7 @@ This provides a simple client-side application to display "Now Playing" informat
 
 This project is open-source and licensed under the [MIT License](LICENSE).
 
-## License
-This project was inspired by [PlexampStatusPage](https://github.com/claesbert/PlexampStatusPage)
+## Related
+This project was inspired by [PlexampStatusPage](https://github.com/claesbert/PlexampStatusPage), check it out! 
 
 
