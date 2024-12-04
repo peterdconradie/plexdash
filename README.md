@@ -50,7 +50,7 @@ This provides a simple client-side application to display "Now Playing" informat
 
 
 ## Issues
-- The progress bar can be janky, plex doesn't reliably provide the information and it won't work when paused. Refreshing should bring you to more or less the right place. 
+- The progress bar can be janky, plex doesn't reliably provide current state and it won't work when paused. Refreshing should bring you to more or less the right place, but it definitely isn't working flawlessly. 
 
 
 ## License
