@@ -11,6 +11,7 @@ let trackDurationInSeconds = 0;
 let intervalId; // Store the interval ID to clear it later
 async function fetchNowPlaying() {
     const url = `${plexServerUrl}/status/sessions?X-Plex-Token=${plexApiKey}`;
+    console.log(`Session URL: ${url}`); // Corrected logging
     try {
         const response = await fetch(url);
         const text = await response.text();
@@ -139,13 +140,7 @@ function progressTimer() {
         console.log('Track duration is not available');
     }
 }
-// Helper function to format seconds into "minutes:seconds"
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-}
-// Helper function to format seconds into "minutes:seconds"
+
 function hasTrackChanged(currentTrackData) {
     if (!lastTrackData) {
         return true;

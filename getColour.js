@@ -43,6 +43,7 @@ export function getDominantColor(imageUrl) {
         }
         else {
             console.log('No vibrant color found.');
+            //if (progressBar) progressBar.style.backgroundColor = #101010;
         }
     };
     img.onerror = function () {
