@@ -1,7 +1,8 @@
 /* General body styling for dark theme */
 
 body {
-    font-family: Helvetica, sans-serif;
+    font-family: "Lato", sans-serif;
+    font-style: normal;
     margin: 0;
     padding: 0;
     background-color: #181818;
@@ -21,7 +22,7 @@ body {
 
 #progress-bar-container {
     width: 100%;
-    height: 2px;
+    height: 1px;
     background-color: #181818;
     /* Light gray background */
     margin: 0;
@@ -59,6 +60,7 @@ body {
     gap: 20px;
     /* Space between album art and track info */
     justify-content: center;
+    margin-top: 1px;
     /* Center content horizontally inside container */
 }
 
@@ -109,6 +111,7 @@ h5,
 ul {
     color: #e5e5e5;
     margin: 0;
+    font-weight: 300;
 }
 
 
@@ -118,6 +121,7 @@ h1 {
     padding-top: .5vw;
     font-size: 4vw;
     padding-bottom: .5vw;
+    font-weight: 700;
 }
 
 h2 {
@@ -140,7 +144,6 @@ h5 {
     margin-bottom: 5px;
     display: inline;
     color: #F5F5F5;
-    font-weight: 400;
 }
 
 
@@ -170,7 +173,6 @@ p {
     margin-bottom: 15px;
     line-height: 1.5em;
     font-size: .75vw;
-    font-weight: 400;
     display: inline;
     color: #767676;
 }

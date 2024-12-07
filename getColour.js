@@ -1,5 +1,3 @@
-// getColour.js
-// Main function
 export function getDominantColor(imageUrl) {
     const img = new Image();
     img.crossOrigin = "anonymous"; // Enable cross-origin requests
@@ -13,38 +11,42 @@ export function getDominantColor(imageUrl) {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const pixels = imageData.data;
         const colorFrequency = {};
+        // Iterate through pixels to collect colors
         for (let i = 0; i < pixels.length; i += 4) {
             const r = pixels[i];
             const g = pixels[i + 1];
             const b = pixels[i + 2];
+            // Filter out near-grays and non-vibrant colors
             if (Math.abs(r - g) < 15 && Math.abs(g - b) < 15 && Math.abs(b - r) < 15) continue;
+            // Convert to HSL and only keep vibrant colors
             const {
                 h, s, l
             } = rgbToHsl(r, g, b);
-            if (s > 0.5) {
+            if (s > 0.5 && l > 0.2 && l < 0.8) { // Adjusting brightness for contrast
                 const rgb = `rgb(${r},${g},${b})`;
                 colorFrequency[rgb] = (colorFrequency[rgb] || 0) + 1;
             }
         }
-        let dominantColor = '';
+        // Find the color with the highest frequency
+        let bestColor = '';
         let maxFrequency = 0;
         for (let color in colorFrequency) {
             if (colorFrequency[color] > maxFrequency) {
                 maxFrequency = colorFrequency[color];
-                dominantColor = color;
+                bestColor = color;
             }
         }
-        if (dominantColor) {
-            const rgbValues = dominantColor.match(/\d+/g).map(Number);
-            const hex = rgbToHex(rgbValues[0], rgbValues[1], rgbValues[2]);
-            const progressBar = document.querySelector('#progress-bar');
-            if (progressBar) progressBar.style.backgroundColor = hex;
-            console.log('Dominant Vibrant Color:', hex);
+        // Fallback: if no vibrant color found, set to a default color
+        if (!bestColor) {
+            bestColor = "#E0E0E0"; //fallback to a light gray
+            console.log('Falling back to ', bestColor);
         }
-        else {
-            console.log('No vibrant color found.');
-            //if (progressBar) progressBar.style.backgroundColor = #101010;
+        // Set the color of the progress bar
+        const progressBar = document.querySelector('#progress-bar');
+        if (progressBar) {
+            progressBar.style.backgroundColor = bestColor;
         }
+        console.log('chosen color:', bestColor);
     };
     img.onerror = function () {
         console.error('Error loading image for color extraction.');
@@ -80,8 +82,4 @@ export function rgbToHsl(r, g, b) {
     return {
         h, s, l
     };
-}
-// Helper function to convert RGB to HEX
-export function rgbToHex(r, g, b) {
-    return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase()}`;
 }
