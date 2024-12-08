@@ -88,6 +88,10 @@ body {
 
 /* Album info section */
 
+span {
+    display: inline;
+}
+
 .album-info {
     flex: 1;
     /* Take up remaining space */
@@ -96,11 +100,19 @@ body {
     gap: 10px;
     max-width: 800px;
     justify-content: flex-start;
+    margin: 0;
+    padding: 0;
     /* Align content at the top */
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-/* Styling for text elements */
+
+/* Uniform heading styling */
 
 p,
 h1,
@@ -120,13 +132,14 @@ ul {
 h1 {
     padding-top: .5vw;
     font-size: 4vw;
-    padding-bottom: .5vw;
+    padding-bottom: .3vw;
     font-weight: 700;
 }
 
 h2 {
     font-size: 3vw;
     padding-bottom: .5vw;
+    padding-top: 0px;
 }
 
 h3 {

@@ -45,7 +45,9 @@ async function fetchNowPlaying() {
                 console.log('Track duration updated:', trackDurationInSeconds);
             }
             // Handle the track and player data
-            const artist = track.getAttribute('grandparentTitle');
+            const artist = track.getAttribute('originalTitle');
+            const albumArtist = track.getAttribute('grandparentTitle');
+            console.log('album artist: ', albumArtist)
             const album = track.getAttribute('parentTitle');
             const trackTitle = track.getAttribute('title');
             const albumArt = `${plexServerUrl}/library/metadata/${track.getAttribute('parentRatingKey')}/thumb/${track.getAttribute('thumb').split('/').pop()}?X-Plex-Token=${plexApiKey}`;
@@ -57,9 +59,9 @@ async function fetchNowPlaying() {
             const samplingRate = audioInfo ? audioInfo.getAttribute('samplingRate') : 'Unknown';
             const audioCodec = audioInfo ? audioInfo.getAttribute('codec') : 'Unknown';
             const playerTitle = player ? player.getAttribute('title') : 'Unknown Player';
-            const AOTYartistSearchLink = `https://www.albumoftheyear.org/search/artists/?q=${encodeURIComponent(artist)}`;
-            const lastFMartistSearchLink = `https://www.last.fm/music/${encodeURIComponent(artist)}`;
-            const discogsArtistLink = `https://www.discogs.com/search/?q=${encodeURIComponent(artist)}&type=artist`;
+            const AOTYartistSearchLink = `https://www.albumoftheyear.org/search/albums/?q=${encodeURIComponent(album)}`;
+            const lastFMartistSearchLink = `https://www.last.fm/search/albums?q=${encodeURIComponent(album)}`;
+            const discogsArtistLink = `https://www.discogs.com/search/?q=${encodeURIComponent(album)}&type=release`;
             console.log(AOTYartistSearchLink);
             console.log(lastFMartistSearchLink);
             console.log(discogsArtistLink);
@@ -70,7 +72,7 @@ async function fetchNowPlaying() {
   <a href="${AOTYartistSearchLink}" target="_blank"><img src="images/aoty.png" alt="AOTY" class="music-icon"/></a><a href="${lastFMartistSearchLink}" target="_blank"><img src="images/last.fm.png" alt="Last.fm" class="music-icon"/></a><a href="${discogsArtistLink}" target="_blank"><img src="images/discogs.png" alt="Discogs" class="music-icon"/></a>
 `;
             const currentTrackData = {
-                artist, album, trackTitle, albumArt, albumYear, trackDuration, trackUrl, audioBitDepth, audioBitrate, audioCodec, playerTitle
+                albumArtist, artist, album, trackTitle, albumArt, albumYear, trackDuration, trackUrl, audioBitDepth, audioBitrate, audioCodec, playerTitle
             };
             if (hasTrackChanged(currentTrackData)) {
                 trackStartTime = 0; // Reset on track change
@@ -85,7 +87,7 @@ async function fetchNowPlaying() {
                 const formattedSamplingRate = samplingRate !== 'Unknown' ? Math.floor(samplingRate / 1000) : 'Unknown';
                 const formattedAudioInfo = `${formattedSamplingRate}/${audioBitDepth}, ${audioBitrate}kbps ${audioCodec}`;
                 document.querySelector('#audio-info').textContent = `${formattedAudioInfo} playing on ${playerTitle}`;
-                document.title = `${trackTitle} - ${artist}`;
+                document.title = `${trackTitle} - ${albumArtist}`;
                 lastTrackData = currentTrackData;
             }
         }
