@@ -22,7 +22,7 @@ export function getDominantColor(imageUrl) {
             const {
                 h, s, l
             } = rgbToHsl(r, g, b);
-            if (s > 0.6 && l > 0.3 && l < 0.7) { // Adjusting brightness for contrast
+            if (s > 0.5 && l > 0.3 && l < 0.7) { // Adjusting brightness for contrast
                 const rgb = `rgb(${r},${g},${b})`;
                 colorFrequency[rgb] = (colorFrequency[rgb] || 0) + 1;
             }
