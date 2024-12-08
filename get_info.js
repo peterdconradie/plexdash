@@ -46,7 +46,7 @@ async function fetchNowPlaying() {
             }
             // Handle the track and player data
             const artist = track.getAttribute('originalTitle');
-            const albumArtist = track.getAttribute('grandparentTitle');
+            const track = track.getAttribute('grandparentTitle');
             console.log('album artist: ', albumArtist)
             const album = track.getAttribute('parentTitle');
             const trackTitle = track.getAttribute('title');
@@ -78,7 +78,7 @@ async function fetchNowPlaying() {
                 trackStartTime = 0; // Reset on track change
                 trackStartOffset = 0;
                 document.querySelector('#track-title').textContent = trackTitle.slice(0, 40);
-                document.querySelector('#track-artist').textContent = artist;
+                document.querySelector('#track-artist').textContent = track - artist;
                 document.querySelector('#album-title').textContent = album;
                 document.querySelector('#album-year').textContent = albumYear;
                 document.querySelector('#album-art').src = albumArt;
