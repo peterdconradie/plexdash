@@ -78,7 +78,7 @@ async function fetchNowPlaying() {
                 trackStartTime = 0; // Reset on track change
                 trackStartOffset = 0;
                 document.querySelector('#track-title').textContent = trackTitle.slice(0, 40);
-                document.querySelector('#track-artist').textContent = artist;
+                document.querySelector('#track-artist').textContent = albumArtist;
                 document.querySelector('#album-title').textContent = album;
                 document.querySelector('#album-year').textContent = albumYear;
                 document.querySelector('#album-art').src = albumArt;
@@ -87,7 +87,7 @@ async function fetchNowPlaying() {
                 const formattedSamplingRate = samplingRate !== 'Unknown' ? Math.floor(samplingRate / 1000) : 'Unknown';
                 const formattedAudioInfo = `${formattedSamplingRate}/${audioBitDepth}, ${audioBitrate}kbps ${audioCodec}`;
                 document.querySelector('#audio-info').textContent = `${formattedAudioInfo} playing on ${playerTitle}`;
-                document.title = `${trackTitle} - ${artist}`;
+                document.title = `${trackTitle} - ${albumArtist}`;
                 lastTrackData = currentTrackData;
             }
         }

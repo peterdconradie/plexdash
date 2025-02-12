@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plexamp Now Playing</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <!-- Preconnect to Google Fonts for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Importing the Lato font -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="style_vertical.css"> </head>
+
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <!-- Content area with album art and info side by side -->
+        <div class="content">
+            <!-- Album Art on the Left -->
+            <div class="album-art-container"> <img src="images/no_song.png" alt="Album Art" id="album-art" onclick="toggleFullscreen()"> </div>
+            <!-- Album Info on the Right -->
+            <div class="album-info">
+                <h1><span id="track-title"></span></h1>
+                <h2><span id="track-artist"></span></h2>
+                <h3><span id="album-title"></span></h3>
+                <h4><span id="album-year"></span></h4>
+                <h5><span id="track-remaining"></span></h5>
+                <div id="audio-info-container">
+                    <p id="audio-info"></p>
+                    <p id="music-connections">album of the year</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="get_info.js"></script>
+</body>
+
+</html>
