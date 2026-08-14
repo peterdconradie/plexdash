@@ -11,40 +11,53 @@ let trackDurationInSeconds = 0;
 let intervalId; // Store the interval ID to clear it later
 async function fetchNowPlaying() {
     const url = `${plexServerUrl}/status/sessions?X-Plex-Token=${plexApiKey}`;
-    console.log(`Session URL: ${url}`); // Corrected logging
+    console.log(`Session URL: ${url}`);
     try {
         const response = await fetch(url);
         const text = await response.text();
-        console.log(text); // Log raw XML data for debugging
+        console.log(text);
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(text, "application/xml");
-        const track = xmlDoc.querySelector('Track');
-        const player = xmlDoc.querySelector('Player'); // Get the Player element
-        if (track) {
+        const allTracks = Array.from(xmlDoc.querySelectorAll('Track'));
+        // Build the list of active sessions (one per player)
+        const sessions = allTracks.map(t => {
+            const player = t.querySelector('Player');
+            return {
+                track: t
+                , player: player
+                , machineIdentifier: player ? player.getAttribute('machineIdentifier') : null
+                , title: player ? player.getAttribute('title') : 'Unknown Player'
+            };
+        }).filter(s => s.machineIdentifier);
+        updatePlayerDropdown(sessions);
+        const selectedId = localStorage.getItem('selectedPlayerId');
+        let chosen = sessions.find(s => s.machineIdentifier === selectedId);
+        // Fall back to the first available session if the saved player isn't active right now
+        if (!chosen && sessions.length > 0) {
+            chosen = sessions[0];
+        }
+        if (chosen) {
+            const track = chosen.track;
+            const player = chosen.player;
             const viewOffset = track.getAttribute('viewOffset');
             const newViewOffset = parseInt(viewOffset, 10) || 0;
-            // Only reset realOffset if a new viewOffset is received
             if (newViewOffset !== lastViewOffset) {
-                realOffset = newViewOffset / 1000; // Convert to seconds
+                realOffset = newViewOffset / 1000;
                 lastViewOffset = newViewOffset;
                 console.log('Updated viewOffset:', realOffset);
-                // Clear the previous interval if it exists
                 if (intervalId) {
                     clearInterval(intervalId);
                 }
-                // Start a new interval to increment realOffset by 1 second every second
                 intervalId = setInterval(() => {
                     realOffset += 1;
                     console.log('realOffset incremented to:', realOffset);
                 }, 1000);
             }
-            // Ensure that track duration is updated here
-            const trackDuration = track.getAttribute('duration'); // Duration in ms
+            const trackDuration = track.getAttribute('duration');
             if (trackDuration) {
-                trackDurationInSeconds = Math.floor(trackDuration / 1000); // Convert to seconds
+                trackDurationInSeconds = Math.floor(trackDuration / 1000);
                 console.log('Track duration updated:', trackDurationInSeconds);
             }
-            // Handle the track and player data
             const artist = track.getAttribute('originalTitle');
             const albumArtist = track.getAttribute('grandparentTitle');
             console.log('album artist: ', albumArtist)
@@ -59,36 +72,58 @@ async function fetchNowPlaying() {
             const samplingRate = audioInfo ? audioInfo.getAttribute('samplingRate') : 'Unknown';
             const audioCodec = audioInfo ? audioInfo.getAttribute('codec') : 'Unknown';
             const playerTitle = player ? player.getAttribute('title') : 'Unknown Player';
+            // External service search URLs
             const AOTYartistSearchLink = `https://www.albumoftheyear.org/search/albums/?q=${encodeURIComponent(album)}`;
             const lastFMartistSearchLink = `https://www.last.fm/search/albums?q=${encodeURIComponent(album)}`;
             const discogsArtistLink = `https://www.discogs.com/search/?q=${encodeURIComponent(album)}&type=release`;
+            const geniusSearchLink = `https://genius.com/search?q=${encodeURIComponent(trackTitle + ' ' + (albumArtist || ''))}`;
             console.log(AOTYartistSearchLink);
             console.log(lastFMartistSearchLink);
             console.log(discogsArtistLink);
-            // Find the music-connections paragraph
+            console.log(geniusSearchLink);
+            // Update the music connections paragraph with the links and icons
             const musicConnectionsParagraph = document.querySelector('#music-connections');
-            // Update the content of the paragraph with the search links and images
             musicConnectionsParagraph.innerHTML = `
-  <a href="${AOTYartistSearchLink}" target="_blank"><img src="images/aoty.png" alt="AOTY" class="music-icon"/></a><a href="${lastFMartistSearchLink}" target="_blank"><img src="images/last.fm.png" alt="Last.fm" class="music-icon"/></a><a href="${discogsArtistLink}" target="_blank"><img src="images/discogs.png" alt="Discogs" class="music-icon"/></a>
+  <a href="${AOTYartistSearchLink}" target="_blank"><img src="images/aoty.png" alt="AOTY" class="music-icon"/></a><a href="${lastFMartistSearchLink}" target="_blank"><img src="images/last.fm.png" alt="Last.fm" class="music-icon"/></a><a href="${discogsArtistLink}" target="_blank"><img src="images/discogs.png" alt="Discogs" class="music-icon"/></a><a href="${geniusSearchLink}" target="_blank"><img src="images/genius.png" alt="Genius" class="music-icon"/></a>
 `;
             const currentTrackData = {
                 albumArtist, artist, album, trackTitle, albumArt, albumYear, trackDuration, trackUrl, audioBitDepth, audioBitrate, audioCodec, playerTitle
             };
             if (hasTrackChanged(currentTrackData)) {
-                trackStartTime = 0; // Reset on track change
+                trackStartTime = 0;
                 trackStartOffset = 0;
                 document.querySelector('#track-title').textContent = trackTitle.slice(0, 40);
                 document.querySelector('#track-artist').textContent = albumArtist;
                 document.querySelector('#album-title').textContent = album;
                 document.querySelector('#album-year').textContent = albumYear;
-                document.querySelector('#album-art').src = albumArt;
-                // this runs the function to get the album art dominant color
+                const albumArtElement = document.querySelector('#album-art');
+                albumArtElement.classList.remove('loaded');
+                albumArtElement.src = albumArt;
+                albumArtElement.onload = () => {
+                    albumArtElement.classList.add('loaded');
+                };
                 getDominantColor(albumArt);
                 const formattedSamplingRate = samplingRate !== 'Unknown' ? Math.floor(samplingRate / 1000) : 'Unknown';
                 const formattedAudioInfo = `${formattedSamplingRate}/${audioBitDepth}, ${audioBitrate}kbps ${audioCodec}`;
-                document.querySelector('#audio-info').textContent = `${formattedAudioInfo} playing on ${playerTitle}`;
+                document.querySelector('#audio-info').textContent = formattedAudioInfo;
                 document.title = `${trackTitle} - ${albumArtist}`;
                 lastTrackData = currentTrackData;
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: trackTitle
+                        , artist: albumArtist
+                        , album: album
+                        , artwork: [
+                            {
+                                src: albumArt
+                                , sizes: '512x512'
+                                , type: 'image/jpeg'
+                            }
+                        ]
+                    });
+                    navigator.mediaSession.setActionHandler('play', () => {});
+                    navigator.mediaSession.setActionHandler('pause', () => {});
+                }
             }
         }
         else {
@@ -100,43 +135,68 @@ async function fetchNowPlaying() {
         resetNowPlaying();
     }
 }
-// Function to log the remaining time and update the HTML
-// Retrieve the saved track start time from localStorage
+
+function updatePlayerDropdown(sessions) {
+    const select = document.querySelector('#player-select');
+    if (!select) return;
+    const currentValue = select.value || localStorage.getItem('selectedPlayerId') || '';
+    // Only rebuild the option list if the set of active players changed, to avoid flicker
+    const newIds = sessions.map(s => s.machineIdentifier).join(',');
+    if (select.dataset.ids === newIds) return;
+    select.dataset.ids = newIds;
+    select.innerHTML = '';
+    if (sessions.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No players active';
+        select.appendChild(option);
+        return;
+    }
+    sessions.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s.machineIdentifier;
+        option.textContent = s.title;
+        select.appendChild(option);
+    });
+    if (sessions.some(s => s.machineIdentifier === currentValue)) {
+        select.value = currentValue;
+    }
+}
+document.addEventListener('change', (e) => {
+    if (e.target && e.target.id === 'player-select') {
+        localStorage.setItem('selectedPlayerId', e.target.value);
+        // Force an immediate refresh with the new selection, instead of waiting for the next poll
+        lastTrackData = null;
+        fetchNowPlaying();
+    }
+});
 const savedTrackStartTime = localStorage.getItem('trackStartTime');
-// Log the retrieved value (if it exists)
 if (savedTrackStartTime) {
-    trackStartTime = parseInt(savedTrackStartTime); // Use saved value if it exists
+    trackStartTime = parseInt(savedTrackStartTime);
     console.log('Track start time retrieved from localStorage:', trackStartTime);
 }
 else {
-    trackStartTime = Date.now(); // If no saved value, use current time
-    localStorage.setItem('trackStartTime', trackStartTime); // Save it for later
+    trackStartTime = Date.now();
+    localStorage.setItem('trackStartTime', trackStartTime);
     console.log('Track start time set to current time:', trackStartTime);
 }
-// Function to log the remaining time and update the HTML
+
 function progressTimer() {
-    console.log('realOffset is:', realOffset); // Log the current realOffset
+    console.log('realOffset is:', realOffset);
     console.log('Track duration is:', trackDurationInSeconds);
-    // If the track duration is valid and realOffset is available, update the display
     if (trackDurationInSeconds > 0) {
-        // Calculate the elapsed time based on realOffset (in seconds)
-        const elapsedTime = Math.floor(realOffset); // Round to nearest second
-        // Convert elapsed time to MM:SS format
+        const elapsedTime = Math.floor(realOffset);
         const elapsedMinutes = Math.floor(elapsedTime / 60);
         const elapsedSeconds = elapsedTime % 60;
         const formattedElapsedTime = `${elapsedMinutes}:${elapsedSeconds.toString().padStart(2, '0')}`;
-        // Convert total track duration to MM:SS format
         const totalMinutes = Math.floor(trackDurationInSeconds / 60);
         const totalSeconds = trackDurationInSeconds % 60;
         const formattedTotalDuration = `${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}`;
-        // Update the track-remaining span with the elapsed time and total track duration
         const trackRemainingElement = document.querySelector('#track-remaining');
         trackRemainingElement.textContent = `${formattedElapsedTime} / ${formattedTotalDuration}`;
-        // Calculate the progress as a percentage
         const progressPercentage = (elapsedTime / trackDurationInSeconds) * 100;
-        // Update the progress bar width
         const progressBar = document.querySelector('#progress-bar');
-        progressBar.style.width = `${progressPercentage}%`; // Update the width based on the progress percentage
+        progressBar.style.width = `${progressPercentage}%`;
     }
     else {
         console.log('Track duration is not available');
@@ -163,12 +223,12 @@ function resetNowPlaying() {
     document.querySelector('#track-artist').textContent = 'Unknown Artist';
     document.querySelector('#album-title').textContent = 'Unknown Album';
     document.querySelector('#album-year').textContent = '----';
-    document.querySelector('#track-remaining').textContent = '0:00/0:00'; // Default time
-    document.querySelector('#album-art').src = 'images/no_song.png'; // Path to a default image
+    document.querySelector('#track-remaining').textContent = '0:00/0:00';
+    document.querySelector('#album-art').src = 'images/no_song.png';
     document.querySelector('#audio-info').textContent = 'No audio information available';
     document.title = 'Plex Now Playing';
 }
-setInterval(progressTimer, 1000); // Call progressTimer every second
+setInterval(progressTimer, 1000);
 setInterval(fetchNowPlaying, 900);
 import {
     getDominantColor

@@ -1,39 +1,31 @@
-/* General body styling for dark theme */
-
-
-/* General body styling for dark theme */
-
+/* General body styling for dark theme - Refined */
 body {
     font-family: "Lato", sans-serif;
     font-style: normal;
     margin: 0;
     padding: 0;
-    background-color: #181818;
+    /* Use a slightly darker background for better contrast */
+    background-color: #121212; 
     color: #E0E0E0;
-    display: flex;
-    justify-content: flex-start;
-    /* Align content at the top */
-    align-items: flex-start;
+    /* Sidebar specific setup: fixed width, no need for flex-direction: column on body */
+    display: block; 
+    /* Assuming a fixed, narrow sidebar width (adjust as needed) */
+    width: 250px; 
     min-height: 100vh;
-    flex-direction: column;
 }
 
-
-/* Main container */
-
+/* Main container - Optimized for Sidebar */
 .container {
+    /* Use padding instead of max-width and margin for fixed sidebar */
+    padding: 10px; 
+    width: 100%;
+    box-sizing: border-box; /* Includes padding in the width */
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    max-width: 90vw;
-    margin-top: 0;
-    /* Ensures no margin at the top */
 }
 
-
-/* Content container (stacking album art & info vertically) */
-
+/* Content container */
 .content {
     display: flex;
     flex-direction: column;
@@ -41,132 +33,127 @@ body {
     width: 100%;
 }
 
-
-/* Album art container */
-
+/* Album art container - Ensures aspect ratio and proper alignment */
 .album-art-container {
+    /* Use padding-bottom trick for aspect ratio control if needed, but for a sidebar 
+       fixed width and square image is usually the goal. */
     width: 100%;
-    /*background-color: #333; */
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    /* Aligns the image at the top */
-    padding-top: 10px;
-    /* Optional: Adds a little padding from the top */
+    align-items: center; /* Center the image vertically in its container */
+    margin-bottom: 15px; /* Add space below the album art */
+    padding-top: 0;
 }
 
-
-/* Album art styling */
-
+/* Album art styling - Ensure square and subtle shadow */
 #album-art {
     width: 100%;
-    max-width: 95vw;
-    height: auto;
+    /* Max width should be based on container, not viewport (95vw is too wide for sidebar) */
+    max-width: 230px; 
+    /* Ensure it's square and fills the space */
+    aspect-ratio: 1/1; 
     object-fit: cover;
+    border-radius: 5px; /* Subtle rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Subtle drop shadow */
 }
 
 
-/* Other CSS remains the same */
-
-
-/* Album info section */
-
+/* Album info section - Cleaner layout */
 .album-info {
     width: 100%;
     text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    margin-left: 30px;
+    /* Reduced gap */
+    gap: 5px; 
+    padding: 0 10px; /* Padding on sides, no top/bottom */
+    /* Removed margin-left: 30px; which was pushing content off-center */
+    margin-left: 0; 
+    box-sizing: border-box;
 }
 
-
-/* Uniform heading styling */
-
-h1,
-h2,
-h3,
-h4,
-h5 {
+/* Uniform heading styling - Simplified */
+h1, h2, h3, h4, h5 {
     color: #e5e5e5;
     margin: 0;
-    font-weight: 300;
+    font-weight: 400; /* Slightly heavier than 300 for better legibility */
+    /* Add text-overflow properties to handle long titles in the narrow sidebar */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
-/* Adjust text sizes */
-
+/* Adjust text sizes - Use static font sizes for predictable sidebar layout */
 h1 {
-    font-size: 6vw;
+    /* Song Title */
+    font-size: 1.1rem;
     font-weight: 700;
 }
 
 h2 {
-    font-size: 4vw;
+    /* Artist Name */
+    font-size: 0.95rem;
+    color: #BBBBBB; /* Slightly dimmer for secondary info */
 }
 
 h3 {
-    font-size: 3vw;
+    /* Album Name / Metadata */
+    font-size: 0.85rem;
+    color: #888888; /* Even dimmer for tertiary info */
 }
-
-h4 {
-    font-size: 2vw;
-}
-
-h5 {
-    font-size: 1.5vw;
-    color: #F5F5F5;
-}
+/* Removed h4 and h5 as they are often unused; if needed, define them here */
 
 
 /* Music connections styling */
-
 #music-connections {
-    text-align: center;
-    margin-top: 5px;
+    text-align: left; /* Aligned left to match info */
+    margin-top: 10px;
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 
 /* Reduce size of images inside #music-connections */
-
 #music-connections img,
 .music-icon {
     display: inline-block;
-    width: 12px;
-    /* Adjust to your preferred size */
-    height: 12px;
-    margin-left: 5px;
+    width: 16px; /* Slightly larger, more visible icons */
+    height: 16px;
+    margin-right: 5px; /* Use margin-right for separation */
+    margin-left: 0;
     vertical-align: middle;
-    filter: grayscale(100%);
+    filter: grayscale(100%) opacity(70%); /* Subtle grayscale and opacity */
+    transition: filter 0.3s ease;
+}
+
+#music-connections img:hover,
+.music-icon:hover {
+    filter: grayscale(0%) opacity(100%); /* Full color on hover */
 }
 
 
-/* Responsive adjustments */
+/* Responsive adjustments - Less critical for a dedicated sidebar, 
+   but adjusted to use static sizes for consistency. */
 
 @media (max-width: 768px) {
-    .container {
-        max-width: 100%;
-    }
-    .album-art-container {
+    /* Assuming this media query targets when the sidebar is rendered differently, 
+       perhaps taking up the full screen on mobile. If it's *always* a narrow sidebar, 
+       this section might be removed entirely or adjusted for minor scaling. 
+       If it is meant to be a full-width overlay on mobile, these sizes are better: */
+    body {
         width: 100%;
     }
-    h1 {
-        font-size: 12vw;
+    .container {
+        max-width: 95%;
+        padding: 20px;
     }
-    h2 {
-        font-size: 10vw;
+    #album-art {
+        max-width: 60vw; /* Larger album art on mobile */
     }
-    h3 {
-        font-size: 8vw;
-    }
-    h4 {
-        font-size: 7vw;
-    }
-    h5 {
-        font-size: 6vw;
-    }
-    p {
-        font-size: 4vw;
-    }
+    h1 { font-size: 7vw; }
+    h2 { font-size: 5vw; }
+    h3 { font-size: 4vw; }
+    /* You can remove h4 and h5 if they aren't used */
 }

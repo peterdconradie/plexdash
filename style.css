@@ -9,46 +9,29 @@ body {
     color: #E0E0E0;
     display: flex;
     justify-content: center;
-    /* Centers horizontally */
     align-items: center;
-    /* Centers vertically */
     min-height: 100vh;
     flex-direction: column;
-    /* Stack elements vertically */
 }
 
 
-/* Progress bar container styling */
+/* Ensure box-sizing applies globally */
 
-#progress-bar-container {
-    width: 100%;
-    height: 1px;
-    background-color: #181818;
-    /* Light gray background */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 
-/* Progress bar styling */
-
-#progress-bar {
-    width: 10%;
-    height: 100%;
-    transition: width 0.1s linear;
-}
-
-
-/* Container for the entire content (progress bar + album art and info) */
+/* Container for the entire content */
 
 .container {
     display: flex;
     flex-direction: column;
-    /* Stack progress bar and content vertically */
     align-items: center;
-    /* Center content horizontally */
     width: 100%;
     max-width: 90vw;
-    /* Limit the container width */
 }
 
 
@@ -58,22 +41,42 @@ body {
     display: flex;
     width: 100%;
     gap: 20px;
-    /* Space between album art and track info */
     justify-content: center;
     margin-top: 1px;
-    /* Center content horizontally inside container */
 }
 
 
-/* Ensure the album art container doesn’t have any extra spacing */
+/* Album art container containing both the progress bar and image */
 
 .album-art-container {
     flex: 0 0 50%;
-    /* Take up half the width of the container */
-    background-color: #333;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+/* Position progress bar absolutely at the top edge of the album art */
+
+#progress-bar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+    z-index: 10;
+}
+
+
+/* Progress bar styling */
+
+#progress-bar {
+    width: 10%;
+    height: 100%;
+    background-color: #ff0000;
+    transition: width 1s linear;
 }
 
 
@@ -82,7 +85,14 @@ body {
 #album-art {
     width: 100%;
     height: auto;
+    display: block;
     object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#album-art.loaded {
+    opacity: 1;
 }
 
 
@@ -94,7 +104,6 @@ span {
 
 .album-info {
     flex: 1;
-    /* Take up remaining space */
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -102,13 +111,6 @@ span {
     justify-content: flex-start;
     margin: 0;
     padding: 0;
-    /* Align content at the top */
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
 
 
@@ -160,12 +162,89 @@ h5 {
 }
 
 
+/* Paragraph styling */
+
+p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    line-height: 1.5em;
+    font-size: .75vw;
+    display: inline;
+    color: #767676;
+}
+
+
+/* Audio Info Container */
+
+#audio-info-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+
+/* Remove paragraph margins in the flex container */
+
+#audio-info-container p {
+    margin-bottom: 0;
+}
+
+
+/* Player Select Badge Styling */
+
+#player-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #242424;
+    color: #e5e5e5;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    padding: 3px 20px 3px 8px;
+    font-family: "Lato", sans-serif;
+    font-size: 0.75vw;
+    font-weight: 300;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    /* Custom subtle dropdown arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23767676' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    background-size: 12px;
+}
+
+
+/* Hover and focus states */
+
+#player-select:hover {
+    background-color: #333333;
+    border-color: #444444;
+    color: #ffffff;
+}
+
+#player-select:focus {
+    outline: none;
+    border-color: #666666;
+}
+
+
+/* Style the dropdown menu options for dark mode compatibility */
+
+#player-select option {
+    background-color: #181818;
+    color: #e5e5e5;
+    padding: 6px;
+}
+
+
 /* Music connections styling */
 
 #music-connections {
     display: inline;
     text-align: center;
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 #music-connections img,
@@ -179,18 +258,6 @@ h5 {
 }
 
 
-/* Paragraph styling */
-
-p {
-    margin-top: 0;
-    margin-bottom: 15px;
-    line-height: 1.5em;
-    font-size: .75vw;
-    display: inline;
-    color: #767676;
-}
-
-
 /* Media query for smaller screens */
 
 @media (max-width: 768px) {
@@ -200,5 +267,6 @@ p {
     }
     .album-art-container {
         max-width: 100%;
+        width: 100%;
     }
 }
