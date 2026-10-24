@@ -22,6 +22,10 @@ import {
     showIdle, hideIdle
 }
 from './idle.js';
+import {
+    loadAbout, resetAbout
+}
+from './about.js';
 
 // --- Settings -------------------------------------------------------------
 const POLL_INTERVAL_MS = 2000; // How often Plex is asked what is playing
@@ -31,6 +35,7 @@ const MAX_TITLE_LENGTH = 40;
 const SHOW_LYRICS = true; // Synced lyrics (needs Plex Pass)
 const SHOW_UP_NEXT = true; // The next tracks in the play queue
 const SHOW_IDLE_SCREEN = true; // Recently played and recently added when nothing is playing
+const SHOW_ABOUT = true; // Artist and album info from MusicBrainz and Wikipedia
 const LIVE_UPDATES = true; // Use Plex's live notifications for instant pause/track changes
 const DEBUG = false; // Set to true to log poll results to the console
 const log = (...args) => {
@@ -146,6 +151,7 @@ function showSession({
         currentTrackKey = trackKey;
         drawTrack(track, player);
         if (SHOW_LYRICS) loadLyrics(track);
+        if (SHOW_ABOUT) loadAbout(track);
     }
     updateUpNext();
     updateProgress();
@@ -389,6 +395,7 @@ function resetNowPlaying() {
         , queueItemID: null
     };
     resetLyrics();
+    resetAbout();
     hideUpNext();
     playback.active = false;
     playback.isPlaying = false;

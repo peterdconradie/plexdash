@@ -115,6 +115,12 @@ function setExpanded(expanded, recentre = true) {
     else if (!expanded) {
         panel.style.minHeight = '';
     }
+    // Let other sheets (the About panel) close when the lyrics open
+    if (expanded && !panel.classList.contains('expanded')) {
+        document.dispatchEvent(new CustomEvent('sheet-open', {
+            detail: 'lyrics'
+        }));
+    }
     panel.classList.toggle('expanded', expanded);
     if (sheet) {
         if (expanded) {
@@ -154,6 +160,9 @@ function isExpanded() {
     });
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isExpanded()) setExpanded(false);
+    });
+    document.addEventListener('sheet-open', (e) => {
+        if (e.detail !== 'lyrics' && isExpanded()) setExpanded(false);
     });
     // Keep the expanded panel lined up with the album title when the layout changes
     // (window resized, up next appearing or disappearing, a longer title, ...)

@@ -55,13 +55,24 @@
                 <div class="up-next-label">Up next</div>
                 <ol id="up-next-list"></ol>
             </div>
-            <div id="lyrics-panel" hidden>
-                <div class="lyrics-sheet">
-                    <button id="lyrics-toggle" type="button" aria-expanded="false" aria-label="Show lyrics" title="Show lyrics">
-                        <span>Lyrics</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>
-                    </button>
-                    <div id="lyrics"></div>
+            <div id="sheet-buttons">
+                <div id="about-panel" hidden>
+                    <div class="about-sheet">
+                        <button id="about-toggle" type="button" aria-expanded="false" aria-label="Show artist and album info" title="Show info">
+                            <span>About</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>
+                        </button>
+                        <div id="about-content"></div>
+                    </div>
+                </div>
+                <div id="lyrics-panel" hidden>
+                    <div class="lyrics-sheet">
+                        <button id="lyrics-toggle" type="button" aria-expanded="false" aria-label="Show lyrics" title="Show lyrics">
+                            <span>Lyrics</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>
+                        </button>
+                        <div id="lyrics"></div>
+                    </div>
                 </div>
             </div>
             <div id="idle" hidden>

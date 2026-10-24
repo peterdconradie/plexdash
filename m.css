@@ -783,3 +783,237 @@ body.idle.has-stats #album-art {
 .stats-empty {
     color: #8a8a8a;
 }
+
+
+/* About panel: artist and album info from MusicBrainz and Wikipedia.
+   Minimised it is a small "About" button next to "Lyrics"; expanded, it covers
+   the album title and everything below it, like the lyrics. */
+
+#sheet-buttons {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+#sheet-buttons #lyrics-panel {
+    margin-top: 0;
+}
+
+#about-panel[hidden] {
+    display: none;
+}
+
+#about-panel:not(.expanded) #about-content {
+    display: none;
+}
+
+.about-sheet {
+    display: flex;
+    flex-direction: column;
+}
+
+#about-panel.expanded .about-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 20px 0;
+    background-color: var(--bg);
+    z-index: 20;
+    animation: lyrics-in 0.3s ease;
+}
+
+#about-toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.7em 0.3em 0.9em;
+    border: 1px solid #333333;
+    border-radius: 999px;
+    background-color: var(--surface);
+    color: #9a9a9a;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+#about-toggle:hover,
+#about-toggle:focus-visible {
+    color: #ffffff;
+    border-color: #555555;
+    outline: none;
+}
+
+#about-toggle svg {
+    width: 1.1em;
+    height: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+#about-panel.expanded #about-toggle {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    z-index: 1;
+}
+
+#about-panel.expanded #about-toggle svg {
+    transform: rotate(180deg);
+}
+
+#about-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-bottom: 24px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent);
+    mask-image: linear-gradient(to bottom, #000 90%, transparent);
+}
+
+#about-content::-webkit-scrollbar {
+    display: none;
+}
+
+.about-section {
+    margin-bottom: 22px;
+}
+
+.about-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-right: 90px; /* Room for the close button */
+}
+
+.about-artist-img {
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--surface);
+}
+
+.about-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+}
+
+.about-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.about-meta {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-top: 3px;
+}
+
+.about-links {
+    margin-top: 6px;
+}
+
+.about-links .music-icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 12px 0 0;
+}
+
+.about-tags {
+    margin-bottom: 10px;
+}
+
+.about-tags span {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border: 1px solid #333333;
+    border-radius: 999px;
+    padding: 0.15em 0.65em;
+    margin: 0 4px 4px 0;
+}
+
+.about-text p {
+    display: block;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--text-dim);
+    margin: 0 0 10px;
+}
+
+.about-text b,
+.about-text strong {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.about-source {
+    font-size: 0.7rem;
+    color: var(--text-faint);
+}
+
+.about-similar {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+}
+
+.about-discography {
+    list-style: none;
+    font-size: 0.9rem;
+}
+
+.about-discography li {
+    display: flex;
+    gap: 10px;
+    padding: 3px 0;
+    color: var(--text-faint);
+}
+
+.about-discography a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.disc-year {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+}
+
+.about-discography li.owned {
+    color: var(--text-dim);
+}
+
+.about-discography li.owned a::after {
+    content: " ●";
+    font-size: 0.7em;
+}
+
+.owned-key {
+    font-size: 0.9em;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.about-discography li.current a {
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* The Wikipedia icon is black, so flip it to show on the dark background */
+.about-links img[src$="wikipedia.png"],
+.about-links a:hover img[src$="wikipedia.png"] {
+    filter: invert(1) grayscale(100%);
+}

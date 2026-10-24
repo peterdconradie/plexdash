@@ -865,3 +865,294 @@ body.idle.has-stats #album-art {
 .stats-empty {
     color: #8a8a8a;
 }
+
+
+/* About panel: artist and album info from MusicBrainz and Wikipedia.
+   Minimised it is a small "About" button next to "Lyrics"; expanded, it covers
+   the album title and everything below it, like the lyrics. */
+
+#sheet-buttons {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5vw;
+    margin-top: 1vw;
+}
+
+#sheet-buttons #lyrics-panel {
+    margin-top: 0;
+}
+
+#about-panel[hidden] {
+    display: none;
+}
+
+#about-panel:not(.expanded) #about-content {
+    display: none;
+}
+
+.about-sheet {
+    display: flex;
+    flex-direction: column;
+}
+
+#about-panel.expanded .about-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #181818;
+    z-index: 20;
+    animation: lyrics-in 0.3s ease;
+}
+
+#about-toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.7em 0.3em 0.9em;
+    border: 1px solid #333333;
+    border-radius: 999px;
+    background-color: #242424;
+    color: #9a9a9a;
+    font-family: var(--font-body);
+    font-size: 0.75vw;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+#about-toggle:hover,
+#about-toggle:focus-visible {
+    color: #ffffff;
+    border-color: #555555;
+    outline: none;
+}
+
+#about-toggle svg {
+    width: 1.1em;
+    height: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+#about-panel.expanded #about-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
+#about-panel.expanded #about-toggle svg {
+    transform: rotate(180deg);
+}
+
+#about-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    padding-bottom: 2vw;
+    -webkit-mask-image: linear-gradient(to bottom, #000 90%, transparent);
+    mask-image: linear-gradient(to bottom, #000 90%, transparent);
+}
+
+#about-content::-webkit-scrollbar {
+    display: none;
+}
+
+.about-section {
+    margin-bottom: 1.6vw;
+}
+
+.about-head {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    margin-bottom: 1vw;
+    padding-right: 6vw; /* Room for the close button */
+}
+
+.about-artist-img {
+    flex: none;
+    width: 5vw;
+    height: 5vw;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #242424;
+}
+
+.about-label {
+    font-size: 0.75vw;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #767676;
+    margin-bottom: 0.4vw;
+}
+
+.about-name {
+    font-size: 1.6vw;
+    font-weight: 700;
+    color: #e5e5e5;
+}
+
+.about-meta {
+    font-size: 0.85vw;
+    color: #9a9a9a;
+    margin-top: 0.3vw;
+}
+
+.about-links {
+    margin-top: 0.5vw;
+}
+
+.about-links .music-icon {
+    width: 0.9vw;
+    height: 0.9vw;
+    margin: 0 0.6vw 0 0;
+    opacity: 0.8;
+}
+
+.about-links a:hover .music-icon {
+    opacity: 1;
+    filter: none;
+}
+
+.about-tags {
+    margin-bottom: 0.8vw;
+}
+
+.about-tags span {
+    display: inline-block;
+    font-size: 0.7vw;
+    color: #9a9a9a;
+    border: 1px solid #333333;
+    border-radius: 999px;
+    padding: 0.15em 0.65em;
+    margin: 0 0.3vw 0.3vw 0;
+}
+
+.about-text p {
+    display: block;
+    font-size: 0.9vw;
+    line-height: 1.55;
+    color: #bdbdbd;
+    margin-bottom: 0.7vw;
+}
+
+.about-text b,
+.about-text strong {
+    font-weight: 700;
+    color: #e5e5e5;
+}
+
+.about-source {
+    font-size: 0.65vw;
+    color: #555555;
+}
+
+.about-similar {
+    font-size: 0.85vw;
+    line-height: 1.5;
+    color: #9a9a9a;
+    margin-bottom: 1.2vw;
+}
+
+.about-discography {
+    list-style: none;
+    columns: 2;
+    column-gap: 2vw;
+    font-size: 0.85vw;
+}
+
+.about-discography li {
+    display: flex;
+    gap: 0.6vw;
+    padding: 0.15vw 0;
+    color: #767676;
+    break-inside: avoid;
+}
+
+.about-discography a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.about-discography a:hover {
+    color: #ffffff;
+}
+
+.disc-year {
+    flex: none;
+    color: #555555;
+    font-variant-numeric: tabular-nums;
+}
+
+.about-discography li.owned {
+    color: #cfcfcf;
+}
+
+.about-discography li.owned a::after,
+.owned-key {
+    content: " ●";
+    font-size: 0.7em;
+    color: #767676;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.about-discography li.current a {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    #sheet-buttons {
+        gap: 2vw;
+        margin-top: 3vw;
+    }
+    #about-panel.expanded .about-sheet {
+        min-height: 40vh;
+    }
+    #about-toggle {
+        font-size: 3vw;
+    }
+    .about-head {
+        gap: 3vw;
+        padding-right: 22vw;
+    }
+    .about-artist-img {
+        width: 14vw;
+        height: 14vw;
+    }
+    .about-label,
+    .about-source {
+        font-size: 2.6vw;
+    }
+    .about-name {
+        font-size: 5vw;
+    }
+    .about-meta,
+    .about-similar,
+    .about-tags span,
+    .about-discography {
+        font-size: 3vw;
+    }
+    .about-text p {
+        font-size: 3.4vw;
+    }
+    .about-links .music-icon {
+        width: 3.5vw;
+        height: 3.5vw;
+        margin-right: 2.5vw;
+    }
+    .about-discography {
+        columns: 1;
+    }
+}
+
+/* The Wikipedia icon is black, so flip it to show on the dark background */
+.about-links img[src$="wikipedia.png"],
+.about-links a:hover img[src$="wikipedia.png"] {
+    filter: invert(1) grayscale(100%);
+}
