@@ -6,3 +6,10 @@ images/favicon_2.png
 .DS_Store
 test.html
 test.js
+
+# macOS metadata files (created e.g. by Proton Drive)
+._*
+
+# Samba temp files and local working folders
+.smbdelete*
+Claude outputs/

@@ -1,15 +1,22 @@
+/* Font: to try another one, change this line (and the Google Fonts link in the HTML) */
+:root {
+    --font-body: "Avenir", "Avenir Next", "Nunito Sans", "Helvetica Neue", Arial, sans-serif; /* Avenir on macOS, Nunito Sans elsewhere */
+}
+
 /* General body styling for dark theme */
 
 body {
-    font-family: "Lato", sans-serif;
+    font-family: var(--font-body);
     font-style: normal;
     margin: 0;
     padding: 0;
     background-color: #181818;
     color: #E0E0E0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* Content sits towards the top left, with an even margin around it */
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 3vw;
     min-height: 100vh;
     flex-direction: column;
 }
@@ -29,9 +36,8 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
-    max-width: 90vw;
 }
 
 
@@ -41,7 +47,7 @@ body {
     display: flex;
     width: 100%;
     gap: 20px;
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 1px;
 }
 
@@ -49,34 +55,12 @@ body {
 /* Album art container containing both the progress bar and image */
 
 .album-art-container {
-    flex: 0 0 50%;
+    /* Left half of the page, but never taller than the window */
+    flex: 0 0 min(50%, calc(100vh - 6vw));
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
-
-
-/* Position progress bar absolutely at the top edge of the album art */
-
-#progress-bar-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: transparent;
-    z-index: 10;
-}
-
-
-/* Progress bar styling */
-
-#progress-bar {
-    width: 10%;
-    height: 100%;
-    background-color: #ff0000;
-    transition: width 1s linear;
+    align-items: flex-start;
 }
 
 
@@ -103,6 +87,7 @@ span {
 }
 
 .album-info {
+    position: relative;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -136,6 +121,10 @@ h1 {
     font-size: 4vw;
     padding-bottom: .3vw;
     font-weight: 700;
+}
+
+#track-remaining {
+    font-variant-numeric: tabular-nums;
 }
 
 h2 {
@@ -203,7 +192,7 @@ p {
     border: 1px solid #333333;
     border-radius: 4px;
     padding: 3px 20px 3px 8px;
-    font-family: "Lato", sans-serif;
+    font-family: var(--font-body);
     font-size: 0.75vw;
     font-weight: 300;
     cursor: pointer;
@@ -258,6 +247,147 @@ p {
 }
 
 
+/* Up next */
+
+#up-next[hidden],
+#lyrics[hidden] {
+    display: none;
+}
+
+#up-next-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#up-next-list li {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+
+/* Fade the upcoming tracks: the next one is the most visible, later ones fainter */
+
+#up-next-list li {
+    opacity: 0.7;
+}
+
+#up-next-list li:nth-child(2) {
+    opacity: 0.45;
+}
+
+#up-next-list li:nth-child(n+3) {
+    opacity: 0.3;
+}
+
+.up-next-art {
+    flex: none;
+    object-fit: cover;
+    border-radius: 3px;
+    background-color: #242424;
+}
+
+.up-next-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.up-next-title,
+.up-next-artist {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.up-next-label {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+
+/* Lyrics: the active line is centred and the edges fade out */
+
+#lyrics {
+    position: relative;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
+}
+
+#lyrics::-webkit-scrollbar {
+    display: none;
+}
+
+.lyric-line {
+    font-weight: 300;
+    line-height: 1.35;
+    transform-origin: left center;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+#lyrics.timed .lyric-line.active {
+    transform: scale(1.04);
+}
+
+#up-next {
+    margin-top: 1vw;
+}
+
+.up-next-label {
+    font-size: 0.75vw;
+    color: #767676;
+    margin-bottom: 0.5vw;
+}
+
+#up-next-list {
+    gap: 0.5vw;
+}
+
+#up-next-list li {
+    gap: 0.7vw;
+}
+
+.up-next-art {
+    width: 2.6vw;
+    height: 2.6vw;
+}
+
+.up-next-title {
+    font-size: 1vw;
+    color: #e5e5e5;
+}
+
+.up-next-artist {
+    font-size: 0.8vw;
+    color: #767676;
+}
+
+#lyrics-panel {
+    margin-top: 1vw;
+}
+
+.lyric-line {
+    font-size: 1.1vw;
+    color: #555555;
+    padding: 0.35vw 0;
+}
+
+#lyrics:not(.timed) .lyric-line {
+    font-size: 0.95vw;
+    color: #9a9a9a;
+}
+
+#lyrics.timed .lyric-line.active {
+    color: #ffffff;
+}
+
+
 /* Media query for smaller screens */
 
 @media (max-width: 768px) {
@@ -266,7 +396,472 @@ p {
         align-items: center;
     }
     .album-art-container {
+        flex: none;
         max-width: 100%;
         width: 100%;
     }
+    .album-info {
+        width: 100%;
+    }
+    #lyrics-panel.expanded .lyrics-sheet {
+        min-height: 40vh;
+    }
+    #lyrics-toggle {
+        font-size: 3vw;
+    }
+    .lyric-line {
+        font-size: 3.5vw;
+    }
+    #lyrics:not(.timed) .lyric-line {
+        font-size: 3vw;
+    }
+    .up-next-label,
+    .up-next-artist {
+        font-size: 2.8vw;
+    }
+    .up-next-title {
+        font-size: 3.5vw;
+    }
+    .up-next-art {
+        width: 9vw;
+        height: 9vw;
+    }
+}
+
+/* Thin progress bar along the top edge of the album art, coloured from the art */
+#progress-bar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: transparent;
+    z-index: 10;
+}
+
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background-color: #E0E0E0;
+    transition: width 0.3s linear;
+}
+
+/* Queue position after the time, e.g. "0:13 / 3:20 · 3 of 12" */
+#queue-position:not(:empty)::before {
+    content: "\00B7";
+    margin: 0 0.5em;
+}
+
+/* Album art with a soft shadow and reflection, a nod to Cover Flow */
+#album-art {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    -webkit-box-reflect: below 3px linear-gradient(transparent 82%, rgba(255, 255, 255, 0.14));
+}
+
+
+/* Lyrics panel. Minimised it is just a small "Lyrics" button (only shown when the
+   track has lyrics). Expanded, it covers the album title and everything below it. */
+
+#lyrics-panel[hidden] {
+    display: none;
+}
+
+.lyrics-sheet {
+    display: flex;
+    flex-direction: column;
+}
+
+#lyrics-panel:not(.expanded) #lyrics {
+    display: none;
+}
+
+#lyrics-panel.expanded .lyrics-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    background-color: #181818;
+    z-index: 20;
+    cursor: pointer;
+    animation: lyrics-in 0.3s ease;
+}
+
+@keyframes lyrics-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.lyrics-sheet #lyrics {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+#lyrics-toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.7em 0.3em 0.9em;
+    border: 1px solid #333333;
+    border-radius: 999px;
+    background-color: #242424;
+    color: #9a9a9a;
+    font-family: var(--font-body);
+    font-size: 0.75vw;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+#lyrics-toggle:hover,
+#lyrics-toggle:focus-visible {
+    color: #ffffff;
+    border-color: #555555;
+    outline: none;
+}
+
+#lyrics-toggle svg {
+    width: 1.1em;
+    height: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+#lyrics-panel.expanded #lyrics-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
+#lyrics-panel.expanded #lyrics-toggle svg {
+    transform: rotate(180deg);
+}
+
+
+/* Idle screen: recently played tracks and recently added albums, shown when nothing plays */
+
+#idle[hidden],
+#idle section[hidden] {
+    display: none;
+}
+
+#idle {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6em;
+    margin-top: 0.5em;
+    font-size: var(--idle-size);
+}
+
+.idle-label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #767676;
+    margin-bottom: 0.9em;
+}
+
+#recent-tracks,
+#recent-albums {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#recent-tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+}
+
+#recent-tracks li {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    min-width: 0;
+}
+
+.recent-art {
+    flex: none;
+    width: 2.4em;
+    height: 2.4em;
+    object-fit: cover;
+    border-radius: 3px;
+    background-color: #242424;
+}
+
+.recent-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.recent-title,
+.recent-meta {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-title {
+    font-size: 1em;
+    color: #e5e5e5;
+}
+
+.recent-meta {
+    font-size: 0.8em;
+    color: #767676;
+    margin-top: 0.15em;
+}
+
+#recent-albums {
+    display: grid;
+    grid-template-columns: repeat(var(--idle-album-columns), minmax(0, 1fr));
+    gap: 1em;
+}
+
+#recent-albums li {
+    min-width: 0;
+}
+
+.album-cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    background-color: #242424;
+}
+
+#recent-albums .recent-text {
+    margin-top: 0.5em;
+}
+
+#recent-albums .recent-title {
+    font-size: 0.85em;
+}
+
+#recent-albums .recent-meta {
+    font-size: 0.75em;
+}
+
+:root {
+    --idle-size: 1vw;
+    --idle-album-columns: 6;
+}
+
+#idle {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#recent-albums li:nth-child(n+13) {
+    display: none;
+}
+
+body.idle h1 {
+    font-size: 3vw;
+}
+
+/* While idle, only the "Nothing playing" heading stays from the normal view */
+body.idle .album-info > h2,
+body.idle .album-info > h3,
+body.idle .album-info > h4,
+body.idle .album-info > h5,
+body.idle #audio-info-container {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --idle-size: 3.2vw;
+        --idle-album-columns: 4;
+    }
+    body.idle h1 {
+        font-size: 6vw;
+    }
+    #recent-albums li:nth-child(n+9) {
+        display: none;
+    }
+}
+
+
+/* Listening stats: replace the placeholder art while nothing is playing.
+   Sizes use cqmin (a share of the panel's size), so it scales with the square. */
+
+#idle-stats {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    container-type: size;
+    background-color: #1f1f1f;
+    border: 1px solid #262626;
+    color: #e5e5e5;
+    font-family: var(--font-body);
+    line-height: 1.2;
+    overflow: hidden;
+    cursor: default;
+}
+
+body.idle.has-stats #idle-stats {
+    display: block;
+}
+
+body.idle.has-stats #album-art {
+    visibility: hidden;
+}
+
+.stats-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3cqmin;
+    width: 100%;
+    height: 100%;
+    padding: 6cqmin;
+}
+
+.stats-label {
+    font-size: 2.6cqmin;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8a8a8a;
+}
+
+.stats-numbers {
+    display: flex;
+    gap: 9cqmin;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    display: block;
+    font-size: 10cqmin;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-name {
+    display: block;
+    margin-top: 1cqmin;
+    font-size: 2.8cqmin;
+    color: #8a8a8a;
+}
+
+/* 7-day chart */
+.stats-chart {
+    display: flex;
+    gap: 2.5cqmin;
+    height: 24cqmin;
+    margin: 1.5cqmin 0 2.5cqmin;
+}
+
+.bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.bar-track {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.bar {
+    width: 100%;
+    min-height: 0.6cqmin;
+    background-color: #4a4a4a;
+    border-radius: 0.6cqmin 0.6cqmin 0 0;
+}
+
+.bar-col.today .bar {
+    background-color: #e0e0e0;
+}
+
+.bar-count {
+    display: block;
+    margin-bottom: 1cqmin;
+    font-size: 2.3cqmin;
+    color: #8a8a8a;
+    font-variant-numeric: tabular-nums;
+}
+
+.bar-day {
+    display: block;
+    margin-top: 1.2cqmin;
+    font-size: 2.3cqmin;
+    text-align: center;
+    color: #8a8a8a;
+}
+
+.bar-col.today .bar-day,
+.bar-col.today .bar-count {
+    color: #e5e5e5;
+}
+
+/* Top artists */
+.stats-top {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.8cqmin;
+    min-height: 0;
+}
+
+.stats-top li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 2cqmin;
+    row-gap: 0.7cqmin;
+    font-size: 2.9cqmin;
+}
+
+.top-name {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.top-count {
+    display: block;
+    color: #8a8a8a;
+    font-variant-numeric: tabular-nums;
+}
+
+.top-track {
+    grid-column: 1 / -1;
+    height: 0.5cqmin;
+    background-color: #2a2a2a;
+}
+
+.top-fill {
+    height: 100%;
+    background-color: #8a8a8a;
+}
+
+.stats-empty {
+    color: #8a8a8a;
 }

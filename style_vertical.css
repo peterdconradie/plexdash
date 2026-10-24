@@ -1,6 +1,11 @@
+/* Font: to try another one, change this line (and the Google Fonts link in the HTML) */
+:root {
+    --font-body: "Avenir", "Avenir Next", "Nunito Sans", "Helvetica Neue", Arial, sans-serif; /* Avenir on macOS, Nunito Sans elsewhere */
+}
+
 /* General body styling for dark theme - Refined */
 body {
-    font-family: "Lato", sans-serif;
+    font-family: var(--font-body);
     font-style: normal;
     margin: 0;
     padding: 0;
@@ -91,6 +96,10 @@ h1 {
     font-weight: 700;
 }
 
+h5 {
+    font-variant-numeric: tabular-nums;
+}
+
 h2 {
     /* Artist Name */
     font-size: 0.95rem;
@@ -134,6 +143,161 @@ h3 {
 }
 
 
+/* Up next */
+
+#up-next[hidden],
+#lyrics[hidden] {
+    display: none;
+}
+
+#up-next-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#up-next-list li {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+
+/* Fade the upcoming tracks: the next one is the most visible, later ones fainter */
+
+#up-next-list li {
+    opacity: 0.7;
+}
+
+#up-next-list li:nth-child(2) {
+    opacity: 0.45;
+}
+
+#up-next-list li:nth-child(n+3) {
+    opacity: 0.3;
+}
+
+.up-next-art {
+    flex: none;
+    object-fit: cover;
+    border-radius: 3px;
+    background-color: #242424;
+}
+
+.up-next-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.up-next-title,
+.up-next-artist {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.up-next-label {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+
+/* Lyrics: the active line is centred and the edges fade out */
+
+#lyrics {
+    position: relative;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 85%, transparent);
+}
+
+#lyrics::-webkit-scrollbar {
+    display: none;
+}
+
+.lyric-line {
+    font-weight: 300;
+    line-height: 1.35;
+    transform-origin: left center;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+#lyrics.timed .lyric-line.active {
+    transform: scale(1.04);
+}
+
+#up-next {
+    margin-top: 12px;
+}
+
+.up-next-label {
+    font-size: 0.65rem;
+    color: #888888;
+    margin-bottom: 6px;
+}
+
+#up-next-list {
+    gap: 6px;
+}
+
+#up-next-list li {
+    gap: 8px;
+}
+
+.up-next-art {
+    width: 32px;
+    height: 32px;
+}
+
+.up-next-title {
+    font-size: 0.8rem;
+    color: #e5e5e5;
+}
+
+.up-next-artist {
+    font-size: 0.7rem;
+    color: #888888;
+}
+
+#lyrics-panel {
+    margin-top: 12px;
+}
+
+/* Let the info column reach the bottom of the sidebar, so the expanded lyrics can too */
+.container {
+    min-height: 100vh;
+}
+
+.content,
+.album-info {
+    flex: 1;
+}
+
+.album-info {
+    position: relative;
+}
+
+.lyric-line {
+    font-size: 0.85rem;
+    color: #555555;
+    padding: 3px 0;
+}
+
+#lyrics:not(.timed) .lyric-line {
+    font-size: 0.78rem;
+    color: #999999;
+}
+
+#lyrics.timed .lyric-line.active {
+    color: #ffffff;
+}
+
+
 /* Responsive adjustments - Less critical for a dedicated sidebar, 
    but adjusted to use static sizes for consistency. */
 
@@ -156,4 +320,266 @@ h3 {
     h2 { font-size: 5vw; }
     h3 { font-size: 4vw; }
     /* You can remove h4 and h5 if they aren't used */
+}
+
+/* Thin progress bar along the top edge of the album art, coloured from the art.
+   The frame is exactly as wide as the art, so the bar lines up with it. */
+.art-frame {
+    position: relative;
+    width: 100%;
+    max-width: 230px;
+    line-height: 0;
+}
+
+@media (max-width: 768px) {
+    .art-frame {
+        max-width: 60vw;
+    }
+}
+
+#progress-bar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    z-index: 10;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background-color: #E0E0E0;
+    transition: width 0.3s linear;
+}
+
+/* Queue position after the time, e.g. "0:13 / 3:20 · 3 of 12" */
+#queue-position:not(:empty)::before {
+    content: "\00B7";
+    margin: 0 0.5em;
+}
+
+
+/* Lyrics panel. Minimised it is just a small "Lyrics" button (only shown when the
+   track has lyrics). Expanded, it covers the album title and everything below it. */
+
+#lyrics-panel[hidden] {
+    display: none;
+}
+
+.lyrics-sheet {
+    display: flex;
+    flex-direction: column;
+}
+
+#lyrics-panel:not(.expanded) #lyrics {
+    display: none;
+}
+
+#lyrics-panel.expanded .lyrics-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 10px 10px;
+    background-color: #121212;
+    z-index: 20;
+    cursor: pointer;
+    animation: lyrics-in 0.3s ease;
+}
+
+@keyframes lyrics-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.lyrics-sheet #lyrics {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+#lyrics-toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.7em 0.3em 0.9em;
+    border: 1px solid #333333;
+    border-radius: 999px;
+    background-color: #1e1e1e;
+    color: #9a9a9a;
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+#lyrics-toggle:hover,
+#lyrics-toggle:focus-visible {
+    color: #ffffff;
+    border-color: #555555;
+    outline: none;
+}
+
+#lyrics-toggle svg {
+    width: 1.1em;
+    height: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+#lyrics-panel.expanded #lyrics-toggle {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    z-index: 1;
+}
+
+#lyrics-panel.expanded #lyrics-toggle svg {
+    transform: rotate(180deg);
+}
+
+/* The sidebar is narrow, so leave room for the button above the lyrics */
+#lyrics-panel.expanded .lyrics-sheet {
+    padding-top: 34px;
+}
+
+
+/* Idle screen: recently played tracks and recently added albums, shown when nothing plays */
+
+#idle[hidden],
+#idle section[hidden] {
+    display: none;
+}
+
+#idle {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6em;
+    margin-top: 0.5em;
+    font-size: var(--idle-size);
+}
+
+.idle-label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #767676;
+    margin-bottom: 0.9em;
+}
+
+#recent-tracks,
+#recent-albums {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#recent-tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+}
+
+#recent-tracks li {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    min-width: 0;
+}
+
+.recent-art {
+    flex: none;
+    width: 2.4em;
+    height: 2.4em;
+    object-fit: cover;
+    border-radius: 3px;
+    background-color: #242424;
+}
+
+.recent-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.recent-title,
+.recent-meta {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-title {
+    font-size: 1em;
+    color: #e5e5e5;
+}
+
+.recent-meta {
+    font-size: 0.8em;
+    color: #767676;
+    margin-top: 0.15em;
+}
+
+#recent-albums {
+    display: grid;
+    grid-template-columns: repeat(var(--idle-album-columns), minmax(0, 1fr));
+    gap: 1em;
+}
+
+#recent-albums li {
+    min-width: 0;
+}
+
+.album-cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    background-color: #242424;
+}
+
+#recent-albums .recent-text {
+    margin-top: 0.5em;
+}
+
+#recent-albums .recent-title {
+    font-size: 0.85em;
+}
+
+#recent-albums .recent-meta {
+    font-size: 0.75em;
+}
+
+:root {
+    --idle-size: 12px;
+    --idle-album-columns: 2;
+}
+
+#idle {
+    margin-top: 10px;
+}
+
+#recent-albums li:nth-child(n+5) {
+    display: none;
+}
+
+/* While idle, only the "Nothing playing" heading stays from the normal view */
+body.idle .album-info > h2,
+body.idle .album-info > h3,
+body.idle .album-info > h4,
+body.idle .album-info > h5,
+body.idle #audio-info-container {
+    display: none;
 }

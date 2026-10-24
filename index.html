@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plexamp Now Playing</title>
-    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg" id="favicon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css"> </head>
 
 <body>
@@ -16,6 +16,19 @@
         <div class="content">
             <!-- Album Art on the Left -->
             <div class="album-art-container">
+                <div id="idle-stats" aria-label="Listening in the last 7 days">
+                    <div class="stats-body">
+                        <div class="stats-label">Last 7 days</div>
+                        <div class="stats-numbers">
+                            <div class="stat"><span class="stat-value" id="stat-plays">0</span><span class="stat-name">plays</span></div>
+                            <div class="stat"><span class="stat-value" id="stat-artists">0</span><span class="stat-name">artists</span></div>
+                            <div class="stat"><span class="stat-value" id="stat-albums">0</span><span class="stat-name">albums</span></div>
+                        </div>
+                        <div class="stats-chart" id="stats-chart"></div>
+                        <div class="stats-label">Top artists</div>
+                        <ol class="stats-top" id="stats-top"></ol>
+                    </div>
+                </div>
                 <div id="progress-bar-container">
                     <div id="progress-bar"></div>
                 </div> <img src="images/no_song.png" alt="Album Art" id="album-art" onclick="toggleFullscreen()"> </div>
@@ -25,11 +38,34 @@
                 <h2><span id="track-artist"></span></h2>
                 <h3><span id="album-title"></span></h3>
                 <h4><span id="album-year"></span></h4>
-                <h5><span id="track-remaining"></span></h5>
+                <h5><span id="track-remaining"></span><span id="queue-position"></span></h5>
                 <div id="audio-info-container">
                     <p id="audio-info"></p>
                     <select id="player-select"></select>
                     <p id="music-connections">album of the year</p>
+                </div>
+                <div id="up-next" hidden>
+                    <div class="up-next-label">Up next</div>
+                    <ol id="up-next-list"></ol>
+                </div>
+                <div id="lyrics-panel" hidden>
+                    <div class="lyrics-sheet">
+                        <button id="lyrics-toggle" type="button" aria-expanded="false" aria-label="Show lyrics" title="Show lyrics">
+                            <span>Lyrics</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>
+                        </button>
+                        <div id="lyrics"></div>
+                    </div>
+                </div>
+                <div id="idle" hidden>
+                    <section id="recent-tracks-section" hidden>
+                        <div class="idle-label">Recently played</div>
+                        <ol id="recent-tracks"></ol>
+                    </section>
+                    <section id="recent-albums-section" hidden>
+                        <div class="idle-label">Recently added</div>
+                        <ol id="recent-albums"></ol>
+                    </section>
                 </div>
             </div>
         </div>
